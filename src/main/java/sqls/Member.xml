@@ -16,7 +16,7 @@
 	</insert>
 	
 	<select id="login" parameterType="gof.gpt5.dto.MemberDto" resultType="gof.gpt5.dto.MemberDto">
-	select email, pwd
+	select *
 	from member
 	where email=#{email} and pwd=#{pwd}
 	</select>

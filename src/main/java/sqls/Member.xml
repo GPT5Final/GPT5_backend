@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="gof.gpt5.dao.MemberDao">
+
+	<select id="emailcheck" parameterType="java.lang.String" resultType="Integer">
+		select count(*)
+		from member
+		where email=#{email}		
+	</select>
+	
+	<insert id="addmember" parameterType="gof.gpt5.dto.MemberDto">
+		insert into member(email, pwd, nickname, gender, name, auth, contact, birth, coin, profile)
+		values(#{email}, #{pwd}, #{nickname}, #{gender}, #{name}, 3, #{contact}, #{birth}, 0, #{profile})
+	</insert>
+	
+	<select id="login" parameterType="gof.gpt5.dto.MemberDto" resultType="gof.gpt5.dto.MemberDto">
+	select email, pwd
+	from member
+	where email=#{email} and pwd=#{pwd}
+	</select>
+
+</mapper>
+
+
+

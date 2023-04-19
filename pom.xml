@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>GPT5_backend</artifactId>
+	<artifactId>GPT5_BACK</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>GPT5_backend</name>
+	<name>GPT5_BACK</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
@@ -83,6 +83,7 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
+		
 
 	<build>
 		<plugins>

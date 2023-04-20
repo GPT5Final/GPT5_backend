@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="gof.gpt5.dao.BbsDao">
+
+	<select id="bbslist" parameterType="gof.gpt5.dto.BbsParam" resultType="gof.gpt5.dto.BbsDto">
+		select seq, id, ref, step, depth, title, content, wdate, del, readcount
+		from (select row_number()over(order by ref desc, step asc) as rnum,
+				seq, id, ref, step, depth, title, content, wdate, del, readcount
+				from bbs
+				<if test="choice != null and choice != '' and search != null and search != '' ">
+					<if test="choice == 'title'">
+						where title like concat('%', #{search}, '%')
+					</if>
+					
+					<if test="choice == 'content'">
+						where content like concat('%', #{search}, '%')
+					</if>
+					
+					<if test="choice == 'writer'">
+						where id=#{search}
+					</if>					
+				</if>
+				 order by ref desc, step asc) a
+				where rnum between ${start} and ${end}	
+	</select>
+	
+<!-- 	글의 총수 -->
+	<select id="getAllBbs" parameterType="gof.gpt5.dto.BbsParam" resultType="java.lang.Integer">
+		select ifnull(count(*), 0)
+		from bbs
+		
+			<if test="choice != null and choice != '' and search != null and search != '' ">
+					<if test="choice == 'title'">
+						where title like concat('%', #{search}, '%') and del=0
+					</if>
+					
+					<if test="choice == 'content'">
+						where content like concat('%', #{search}, '%') and del=0
+					</if>
+					
+					<if test="choice == 'writer'">
+						where id=#{search} and del=0
+					</if>					
+				</if>
+					
+	</select>
+	
+	
+	
+	<insert id="writeBbs" parameterType="gof.gpt5.dto.BbsDto">	
+<!-- 		<selectKey keyProperty="ref" resultType="Integer" order="BEFORE"> -->
+<!-- 			select ifnull(max(ref), 0)+1 from bbs -->
+<!-- 		</selectKey>		 -->
+		insert into bbs(id, ref, step, depth, title, content, wdate, del, readcount)
+		values(#{id}, (select ifnull(max(ref), 0) +1 from bbs b), 0, 0, #{title}, #{content}, now(), 0, 0)
+	</insert>
+	
+	<select id="getBbs" parameterType="Integer" resultType="gof.gpt5.dto.BbsDto">
+		select seq, id, ref, step, depth, title, content, wdate, del, readcount
+		from bbs
+		where seq =#{seq}
+	</select>
+	
+	
+	<update id="updateBbs" parameterType="gof.gpt5.dto.BbsDto">
+	update bbs
+	set title=#{title}, content=#{content}, wdate=now()
+	where seq=#{seq}
+	</update>
+	
+	<update id="deleteBbs" parameterType="Integer">
+		update bbs
+		set del=1
+		where seq=#{seq}
+	</update> 
+<!-- 	
+ 	<delete id="deleteBbs" parameterType="Integer">
+		delete
+		from bbs
+		where seq = #{seq}
+	</delete>
+-->
+	
+	
+						<!-- 답글 -->
+<!-- 수정 -->
+<update id="answerBbsUpdate" parameterType="gof.gpt5.dto.BbsDto">
+	update bbs
+	set step=step+1
+	where ref=(select ref from (select ref from bbs a where seq=#{seq}) A)
+		and step>(select step from (select step from bbs b where seq=#{seq}) B)
+</update>
+
+<!-- 추가 -->
+<insert id="answerBbsInsert" parameterType="gof.gpt5.dto.BbsDto">
+	insert into bbs(id, ref, step, depth, title, content, wdate, del, readcount)
+	values(#{id}, (select ref from bbs a where seq=#{seq}),
+				  (select step from bbs b where seq=#{seq})+1,
+				  (select depth from bbs c where seq=#{seq})+1,
+			#{title}, #{content}, now(), 0, 0)
+</insert>
+
+
+
+
+						<!-- 댓글 -->
+<insert id="commentWrite" parameterType="gof.gpt5.dto.BbsComment">
+	insert into bbscomment(seq, id, content, wdate)
+	values(#{seq}, #{id}, #{content}, now())
+</insert>
+
+<select id="commentList" parameterType="Integer" resultType="gof.gpt5.dto.BbsComment">
+	select *
+	from bbscomment
+	where seq=#{seq}
+	order by wdate desc
+</select>
+
+
+</mapper>
+	

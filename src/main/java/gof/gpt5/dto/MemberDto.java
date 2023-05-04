@@ -3,20 +3,20 @@ package gof.gpt5.dto;
 import java.io.Serializable;
 /*
 		CREATE TABLE member (
-		email varchar(50) NOT NULL,
-		pwd varchar(50) NOT NULL,
-		nickname varchar(50) NOT NULL,
-		gender char(1) NOT NULL,
-		name varchar(50) DEFAULT NULL,
-		auth int NOT NULL COMMENT '운영자 : 0, 회원 : 1',
-		contact varchar(255) DEFAULT NULL,
-		birth int NOT NULL,
-		coin int default 0 unique key,		
-		profile decimal(1),
-		
-		UNIQUE KEY (nickname),
-		PRIMARY KEY email (email)
-		);  
+			email varchar(50) NOT NULL,
+			pwd varchar(50) NOT NULL,
+			nickname varchar(50) NOT NULL,
+			gender char(1) NOT NULL,
+			name varchar(50) DEFAULT NULL,
+			auth int NOT NULL COMMENT '운영자 : 0, 회원 : 1',
+			contact varchar(255) DEFAULT NULL,
+			birth int NOT NULL,
+			coin int default 0 unique key,			
+			profile decimal(1),
+			UNIQUE KEY (nickname),
+			PRIMARY KEY email (email),
+			foreign key(email) references emailchk(email) on delete cascade
+			);
  */
 public class MemberDto implements Serializable {
 

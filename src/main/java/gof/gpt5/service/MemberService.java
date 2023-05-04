@@ -54,6 +54,16 @@ public class MemberService {
 
 	public MemberDto login(MemberDto dto) {
 		return dao.login(dto);
-
 	}
+	
+	public MemberDto getMember(MemberDto dto) {
+		return dao.getMember(dto);
+	}
+	
+	public boolean chargeCoin(MemberDto dto) {
+		int n = dao.chargeCoin(dto);
+		return n > 0 ? true : false;
+	}
+	
+
 }

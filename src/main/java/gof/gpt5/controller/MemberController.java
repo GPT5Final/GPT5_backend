@@ -1,9 +1,17 @@
 package gof.gpt5.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +25,7 @@ import gof.gpt5.service.MemberService;
 
 @RestController
 public class MemberController {
+	public static String localPath = "/Users/admin/springboot_img/";
 
 	@Autowired
 	MemberService service;
@@ -119,9 +128,11 @@ public class MemberController {
 	}
 
 	@PostMapping(value = "/addmember")
-	public String addmember(MemberDto dto) {
+	public String addmember(@ModelAttribute MemberDto dto) throws IOException {
 		System.out.println("MemberController addmember " + new Date());
-
+		
+		System.out.println(dto.toString());
+		
 		boolean b = service.addmember(dto);
 		if (!b) {
 			return "NO";
@@ -149,18 +160,7 @@ public class MemberController {
 
 		return mem;
 	}
-	@PostMapping(value = "/addmembernull")
-	public String addmembernull(MemberDto dto) {
-		System.out.println("MemberController addmembernull " + new Date());
 
-		System.out.println(dto);
-
-		boolean b = service.addmember(dto);
-		if (!b) {
-			return "NO";
-		}
-		return "YES";
-	}
 	
 	@PostMapping(value = "/login")
 	public MemberDto login(MemberDto dto) {		
@@ -179,7 +179,6 @@ public class MemberController {
 	}
 	
 	
-	
 	@PostMapping(value = "/updatemember")
 	public String updatemember(@RequestBody MemberDto dto) {
 		System.out.println("MemberController updatemember " + new Date());
@@ -193,6 +192,7 @@ public class MemberController {
 		}
 		return "YES";
 	}
+	
 	@PostMapping(value = "/updatemembernull")
 	public String updatemembernull(@RequestBody MemberDto dto) {
 		System.out.println("updatemembernull updatemember " + new Date());
@@ -216,4 +216,17 @@ public class MemberController {
 		MemberDto mem = service.allmember(dto);
 		return mem;
 	}
+	
+	@GetMapping(value = "/images/{folderName}/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<FileSystemResource> getImage(@PathVariable String folderName, @PathVariable String imageName) {
+        System.out.println("getImage " + new Date());
+
+        String imagePath = localPath + folderName + "/" + imageName;
+
+        File imageFile = new File(imagePath);
+        return ResponseEntity.ok()
+                .contentLength(imageFile.length())
+                .body(new FileSystemResource(imageFile));
+    }
+	
 }

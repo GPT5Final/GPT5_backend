@@ -29,13 +29,15 @@ public interface MemberDao {
 	int emailAuthChk(EmailChkDto dto);
 
 	int emailcheck(String email);
+	
 	int addmember(MemberDto dto);
+	
 	MemberDto login(MemberDto dto);
 	MemberDto getMember(MemberDto dto);
 	
 	int chargeCoin(MemberDto dto);
 
-	int addmembernull(MemberDto dto);
+	
 	int delmember(String email);
 	int updatemember(MemberDto dto);
 	MemberDto allmember(MemberDto dto);

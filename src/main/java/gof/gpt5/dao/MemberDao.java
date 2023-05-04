@@ -31,5 +31,8 @@ public interface MemberDao {
 	int emailcheck(String email);
 	int addmember(MemberDto dto);
 	MemberDto login(MemberDto dto);
+	MemberDto getMember(MemberDto dto);
+	
+	int chargeCoin(MemberDto dto);
 
 }

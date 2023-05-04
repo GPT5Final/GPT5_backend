@@ -26,33 +26,47 @@
 		from member
 		where email=#{Email}
 	</select>
-	
+
 	<!-- 인증코드메일 다시전송 -->
-	<update id="updateEmailKey" parameterType="gof.gpt5.dto.EmailChkDto">
+	<update id="updateEmailKey"
+		parameterType="gof.gpt5.dto.EmailChkDto">
 		update emailchk
 		set email_key=#{EmailKey}
-		where email=#{Email}
+		where
+		email=#{Email}
 	</update>
-	
+
 	<!-- 저장된 이메일정보와 key가 일치하는지 확인 -->
-	<select id="emailKeyChk" parameterType="gof.gpt5.dto.EmailChkDto" resultType="gof.gpt5.dto.EmailChkDto">
+	<select id="emailKeyChk"
+		parameterType="gof.gpt5.dto.EmailChkDto"
+		resultType="gof.gpt5.dto.EmailChkDto">
 		select email
 		from emailchk
-		where email=#{Email} and email_key=#{EmailKey}
+		where email=#{Email} and
+		email_key=#{EmailKey}
 	</select>
-	
+
 	<!-- 메일 인증을 하면 email_auth 컬럼을 기본값 0에서 1로 바꿔 회원가입을 허용 -->
-	<update id="updateMailAuth" parameterType="gof.gpt5.dto.EmailChkDto">
+	<update id="updateMailAuth"
+		parameterType="gof.gpt5.dto.EmailChkDto">
 		update emailchk
 		set email_auth=1
-		where email=#{Email} and email_key=#{EmailKey}
+		where email=#{Email} and
+		email_key=#{EmailKey}
 	</update>
-	
+
 	<!-- 이메일이 등록되고 인증까지 완료되었는지 확인 -->
-	<select id="emailAuthChk" parameterType="gof.gpt5.dto.EmailChkDto" resultType="Integer">
+	<select id="emailAuthChk"
+		parameterType="gof.gpt5.dto.EmailChkDto" resultType="Integer">
 		select email_auth
 		from emailchk
 		where email=#{Email}
+	</select>
+
+	<select id="getMember" parameterType="gof.gpt5.dto.MemberDto"
+		resultType="gof.gpt5.dto.MemberDto">
+		select * from member
+		where nickname = #{nickname}
 	</select>
 
 	<insert id="addmember" parameterType="gof.gpt5.dto.MemberDto">
@@ -69,6 +83,12 @@
 		where email=#{email} and pwd=#{pwd}
 	</select>
 
+	<update id="chargeCoin" parameterType="gof.gpt5.dto.MemberDto">
+		update member
+		set coin = coin +
+		#{coin}
+		where nickname = #{nickname}
+	</update>
 </mapper>
 
 

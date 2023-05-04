@@ -64,7 +64,7 @@ public class MemberController {
 				sendMail.setSubject("GPT5 인증메일입니다.");
 				sendMail.setText("<h1>GPT5 메일인증</h1>" + "<br><br>" + "<p>이메일 인증코드는 <b>" + mailKey + "</b> 입니다.</p><br>"
 						+ "<p>사이트로 돌아가서 인증코드를 입력해주세요</p>");
-				sendMail.setFrom("mintjd974@naver.com", "GPT5");
+				sendMail.setFrom("dlsco123@naver.com", "GPT5");
 				sendMail.setTo(dto.getEmail());
 				sendMail.send();
 
@@ -77,7 +77,7 @@ public class MemberController {
 					sendMail.setSubject("GPT5 인증메일입니다.");
 					sendMail.setText("<h1>GPT5 메일인증</h1>" + "<br><br>" + "<p>이메일 인증코드는 <b>" + mailKey
 							+ "</b> 입니다.</p><br>" + "<p>사이트로 돌아가서 인증코드를 입력해주세요</p>");
-					sendMail.setFrom("mintjd974@naver.com", "GPT5");
+					sendMail.setFrom("dlsco123@naver.com", "GPT5");
 					sendMail.setTo(dto.getEmail());
 					sendMail.send();
 

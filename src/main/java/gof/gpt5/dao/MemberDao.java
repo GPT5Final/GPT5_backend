@@ -35,4 +35,8 @@ public interface MemberDao {
 	
 	int chargeCoin(MemberDto dto);
 
+	int addmembernull(MemberDto dto);
+	int delmember(String email);
+	int updatemember(MemberDto dto);
+	MemberDto allmember(MemberDto dto);
 }

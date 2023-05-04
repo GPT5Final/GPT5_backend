@@ -75,6 +75,11 @@
 		values(#{email}, #{pwd}, #{nickname}, #{gender}, #{name}, 3,
 		#{contact}, #{birth}, 0, #{profile})
 	</insert>
+	
+	<insert id="addmembernull" parameterType="gof.gpt5.dto.MemberDto">
+		insert into member(email, pwd, nickname, gender, name, auth, contact, birth, coin, profile)
+		values(#{email}, #{pwd}, #{nickname}, #{gender}, #{name}, 3, #{contact}, #{birth}, 0, #{profile})
+	</insert>
 
 	<select id="login" parameterType="gof.gpt5.dto.MemberDto"
 		resultType="gof.gpt5.dto.MemberDto">
@@ -89,6 +94,34 @@
 		#{coin}
 		where nickname = #{nickname}
 	</update>
+	
+	<!-- 회원탈퇴 -->
+	<delete id="delmember" parameterType="String">
+		delete 
+		from member
+		where email = #{email}
+	</delete> 
+	
+	<!-- 수정 -->
+	<update id = "updatemember" parameterType="gof.gpt5.dto.MemberDto">
+		update member
+		set nickname=#{nickname}, email=#{email}, pwd=#{pwd}, contact=#{contact}, profile=#{profile}, image=#{image}
+		<!-- key값은 email -->
+		where email=#{email}
+	</update>
+
+	<update id = "updatemembernull" parameterType="gof.gpt5.dto.MemberDto">
+		update member
+		set nickname=#{nickname}, email=#{email}, pwd=#{pwd}, contact=#{contact}, profile=#{profile}
+		<!-- key값은 email -->
+		where email=#{email}
+	</update>
+	
+	<select id="allmember" parameterType="gof.gpt5.dto.MemberDto" resultType="gof.gpt5.dto.MemberDto">
+		select *
+		from member
+		where email=#{email}
+	</select>
 </mapper>
 
 

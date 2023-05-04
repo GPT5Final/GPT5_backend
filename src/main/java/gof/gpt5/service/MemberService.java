@@ -65,5 +65,18 @@ public class MemberService {
 		return n > 0 ? true : false;
 	}
 	
+	public boolean delmember(String email) {
+		int n = dao.delmember(email);
+		return n>0?true:false;
+	}
+	
+	public boolean updatemember(MemberDto dto) {
+		int n = dao.updatemember(dto);
+		return n>0?true:false;
+	}
+	
+	public MemberDto allmember(MemberDto dto) {
+		return dao.allmember(dto);
+	}
 
 }

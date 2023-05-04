@@ -1,6 +1,8 @@
 package gof.gpt5.dto;
 
 import java.io.Serializable;
+
+import org.springframework.web.multipart.MultipartFile;
 /*
 		CREATE TABLE member (
 			email varchar(50) NOT NULL,
@@ -29,7 +31,9 @@ public class MemberDto implements Serializable {
 	private String contact;
 	private String birth;
 	private int coin;
-	private int profile;
+	private String profile;
+	
+	private MultipartFile image;
 
 	public MemberDto() {
 	}
@@ -106,20 +110,30 @@ public class MemberDto implements Serializable {
 		this.coin = coin;
 	}
 
-	public int getProfile() {
+	public String getProfile() {
 		return profile;
 	}
 
-	public void setProfile(int profile) {
+	public void setProfile(String profile) {
 		this.profile = profile;
+	}
+
+	public MultipartFile getImage() {
+		return image;
+	}
+
+	public void setImage(MultipartFile image) {
+		this.image = image;
 	}
 
 	@Override
 	public String toString() {
 		return "MemberDto [email=" + email + ", pwd=" + pwd + ", nickname=" + nickname + ", gender=" + gender
 				+ ", name=" + name + ", auth=" + auth + ", contact=" + contact + ", birth=" + birth + ", coin=" + coin
-				+ ", profile=" + profile + "]";
+				+ ", profile=" + profile + ", image=" + image + "]";
 	}
+
+	
 	
 
 }

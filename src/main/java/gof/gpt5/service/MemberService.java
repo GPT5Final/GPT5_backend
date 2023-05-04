@@ -1,8 +1,13 @@
 package gof.gpt5.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import gof.gpt5.dao.MemberDao;
 import gof.gpt5.dto.EmailChkDto;
@@ -11,6 +16,8 @@ import gof.gpt5.dto.MemberDto;
 @Service
 @Transactional
 public class MemberService {
+	public static String localPath = "/Users/admin/springboot_img/";
+	
 	@Autowired
 	MemberDao dao;
 
@@ -47,11 +54,30 @@ public class MemberService {
 		return n == 1 ? true : false;
 	}
 
-	public boolean addmember(MemberDto dto) {
-		int n = dao.addmember(dto);
-		return n > 0 ? true : false;
-	}
+//	public boolean addmember(MemberDto dto) {
+//		int n = dao.addmember(dto);
+//		return n > 0 ? true : false;
+//	}
 
+	public boolean addmember(MemberDto dto) throws IOException {
+        System.out.println("service 도착");
+        if (dto.getImage() != null) {
+            MultipartFile imageFile = dto.getImage();
+            String originalFileName = imageFile.getOriginalFilename();    //오리지날 파일명
+            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+            String storedFileName = UUID.randomUUID() + extension;
+            String savePath = localPath + "profile/" + storedFileName;
+            imageFile.transferTo(new File(savePath));
+
+            dto.setProfile(storedFileName);
+        }
+        System.out.println(dto);
+        System.out.println("service 탈출");
+        int n = dao.addmember(dto);
+		return n > 0 ? true : false;
+    }
+	
 	public MemberDto login(MemberDto dto) {
 		return dao.login(dto);
 	}

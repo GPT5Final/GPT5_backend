@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -128,19 +129,6 @@ public class MemberController {
 		return "YES";
 	}
 
-	@PostMapping(value = "/login")
-	public MemberDto login(MemberDto dto) {
-
-		System.out.println("MemberController login " + new Date());
-
-		MemberDto mem = service.login(dto);
-//		if (mem != null) {
-//			req.getSession().setAttribute("login", mem);
-//			req.getSession().setMaxInactiveInterval(7200);
-//			return mem;
-//		}
-		return mem;
-	}
 
 	@PostMapping(value = "/chargeCoin")
 	public String chargeCoin(MemberDto dto) {
@@ -159,6 +147,73 @@ public class MemberController {
 		System.out.println("MemberController getMember " + new Date());
 		MemberDto mem = service.getMember(dto);
 
+		return mem;
+	}
+	@PostMapping(value = "/addmembernull")
+	public String addmembernull(MemberDto dto) {
+		System.out.println("MemberController addmembernull " + new Date());
+
+		System.out.println(dto);
+
+		boolean b = service.addmember(dto);
+		if (!b) {
+			return "NO";
+		}
+		return "YES";
+	}
+	
+	@PostMapping(value = "/login")
+	public MemberDto login(MemberDto dto) {		
+		System.out.println("MemberController login " + new Date());
+		
+		MemberDto mem = service.login(dto);
+		
+		
+		System.out.println(dto);
+//		if (mem != null) {
+//			req.getSession().setAttribute("login", mem);
+//			req.getSession().setMaxInactiveInterval(7200);
+//			return mem;
+//		}
+		return mem;
+	}
+	
+	
+	
+	@PostMapping(value = "/updatemember")
+	public String updatemember(@RequestBody MemberDto dto) {
+		System.out.println("MemberController updatemember " + new Date());
+		System.out.println(dto);
+		System.out.println(dto.getNickname());
+		
+		boolean b = service.updatemember(dto);
+		
+		if(!b) {
+			return "NO";
+		}
+		return "YES";
+	}
+	@PostMapping(value = "/updatemembernull")
+	public String updatemembernull(@RequestBody MemberDto dto) {
+		System.out.println("updatemembernull updatemember " + new Date());
+		System.out.println(dto);
+		System.out.println(dto.getNickname());
+		System.out.println(dto.getProfile());
+
+		boolean b = service.updatemember(dto);
+
+		if(!b) {
+			return "NO";
+		}
+		return "YES";
+	}
+	
+	@PostMapping(value = "/allmember")
+	
+	public MemberDto allmember(@RequestBody MemberDto dto) {
+		System.out.println("MemberController allmember " + new Date());
+		
+		MemberDto mem = service.allmember(dto);
 		return mem;
 	}
 }

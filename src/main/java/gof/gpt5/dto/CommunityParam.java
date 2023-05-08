@@ -1,20 +1,17 @@
 package gof.gpt5.dto;
 
-import java.io.Serializable;
-
-public class BbsParam implements Serializable{
+public class CommunityParam {
 	private String choice;
 	private String search;
 	private int pageNumber;
-	
-	
+
 	private int start;
 	private int end;
-	
-	public BbsParam() {
+
+	public CommunityParam() {
 	}
 
-	public BbsParam(String choice, String search, int pageNumber, int start, int end) {
+	public CommunityParam(String choice, String search, int pageNumber, int start, int end) {
 		super();
 		this.choice = choice;
 		this.search = search;
@@ -65,9 +62,8 @@ public class BbsParam implements Serializable{
 
 	@Override
 	public String toString() {
-		return "BbsParam [choice=" + choice + ", search=" + search + ", pageNumber=" + pageNumber + ", start=" + start
+		return "CommunityParam [choice=" + choice + ", search=" + search + ", pageNumber=" + pageNumber + ", start=" + start
 				+ ", end=" + end + "]";
 	}
-	
-	
+
 }

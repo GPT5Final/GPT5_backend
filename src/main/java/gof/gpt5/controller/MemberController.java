@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.UUID;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import gof.gpt5.dto.TrainerDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,8 +177,6 @@ public class MemberController {
 
 		MemberDto mem = service.login(dto);
 
-
-		System.out.println("login 에서 찍은" + dto);
 //		if (mem != null) {
 //			req.getSession().setAttribute("login", mem);
 //			req.getSession().setMaxInactiveInterval(7200);
@@ -234,10 +233,16 @@ public class MemberController {
 		return ResponseEntity.ok().contentLength(imageFile.length()).body(new FileSystemResource(imageFile));
 	}
 
-//	@PostMapping(value = "/delmember")
-//	public String delmember(String email){
-//
-//
-//	}
+	@PostMapping(value = "/delmember")
+	public String delmember(String email){
+		System.out.println("MemberController delmember " + new Date());
+
+		boolean b = service.delmember(email);
+
+		if(!b) {
+			return "NO";
+		}
+		return "YES";
+	}
 
 }

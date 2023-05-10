@@ -12,32 +12,33 @@ public interface MemberDao {
 
 	// 이메일 인증
 	int insertEmailKey(EmailChkDto dto);
-	
+
 	// 이메일 중복확인
 	int emailChk(String email);
-	
+
 	// 이메일 재전송
 	int updateEmailKey(EmailChkDto dto);
-	
+
 	// 인증코드 일치 확인
 	EmailChkDto emailKeyChk(EmailChkDto dto);
-	
+
 	// 인증완료하면 auth 1로 변경
 	int updateMailAuth(EmailChkDto dto);
-	
+
 	// 이메일 인증완료여부 확인
 	int emailAuthChk(EmailChkDto dto);
 
 	int emailcheck(String email);
-	
+
 	int addmember(MemberDto dto);
-	
+
+	int updatemembernull(MemberDto dto);
+
 	MemberDto login(MemberDto dto);
 	MemberDto getMember(MemberDto dto);
-	
+
 	int chargeCoin(MemberDto dto);
 
-	
 	int delmember(String email);
 	int updatemember(MemberDto dto);
 	MemberDto allmember(MemberDto dto);

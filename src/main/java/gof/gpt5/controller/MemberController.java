@@ -234,6 +234,10 @@ public class MemberController {
 		return ResponseEntity.ok().contentLength(imageFile.length()).body(new FileSystemResource(imageFile));
 	}
 
-
+//	@PostMapping(value = "/delmember")
+//	public String delmember(String email){
+//
+//
+//	}
 
 }

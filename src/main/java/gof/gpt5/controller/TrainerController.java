@@ -50,7 +50,9 @@ public class TrainerController {
     public String trainerwrite(TrainerDto dto, @RequestParam("file") MultipartFile file) {
         // 이미지를 저장할 폴더 경로
     	String folderPath = "src/main/resources/static/images/";
+
     	Path currentPath = Paths.get("").toAbsolutePath();
+
     	String absoluteFolderPath = currentPath.resolve(folderPath).toString();
     	File folder = new File(absoluteFolderPath);
 
@@ -84,11 +86,6 @@ public class TrainerController {
         // 이미지 파일 경로를 TrainerDto에 설정
         dto.setFilename(file.getOriginalFilename());
         dto.setNewfilename( newFileName);
-//        dto.setFilename("resources/static/images/" + file.getOriginalFilename());
-//        dto.setNewfilename("resources/static/images/" + newFileName);
-//        dto.setFilename("images/" + file.getOriginalFilename());
-//        dto.setNewfilename("images/" + newFileName);
-
         
         // 여기에 저장 경로 및 파일 정보 출력 코드 추가
         System.out.println("원본 파일 이름: " + originalFilename);

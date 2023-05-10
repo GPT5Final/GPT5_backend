@@ -2,9 +2,15 @@ package gof.gpt5.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.UUID;
 
+import gof.gpt5.dto.TrainerDto;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +28,11 @@ import gof.gpt5.dto.MemberDto;
 import gof.gpt5.mail.MailHandler;
 import gof.gpt5.mail.TempKey;
 import gof.gpt5.service.MemberService;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class MemberController {
-	public static String localPath = "/Users/admin/springboot_img/";
+	public static String localPath = "src/main/resources/static/images/";
 
 	@Autowired
 	MemberService service;
@@ -64,7 +71,7 @@ public class MemberController {
 				sendMail.setSubject("GPT5 인증메일입니다.");
 				sendMail.setText("<h1>GPT5 메일인증</h1>" + "<br><br>" + "<p>이메일 인증코드는 <b>" + mailKey + "</b> 입니다.</p><br>"
 						+ "<p>사이트로 돌아가서 인증코드를 입력해주세요</p>");
-				sendMail.setFrom("dlsco123@naver.com", "GPT5");
+				sendMail.setFrom("mintjd974@naver.com", "GPT5");
 				sendMail.setTo(dto.getEmail());
 				sendMail.send();
 
@@ -77,7 +84,7 @@ public class MemberController {
 					sendMail.setSubject("GPT5 인증메일입니다.");
 					sendMail.setText("<h1>GPT5 메일인증</h1>" + "<br><br>" + "<p>이메일 인증코드는 <b>" + mailKey
 							+ "</b> 입니다.</p><br>" + "<p>사이트로 돌아가서 인증코드를 입력해주세요</p>");
-					sendMail.setFrom("dlsco123@naver.com", "GPT5");
+					sendMail.setFrom("mintjd974@naver.com", "GPT5");
 					sendMail.setTo(dto.getEmail());
 					sendMail.send();
 
@@ -128,12 +135,13 @@ public class MemberController {
 	}
 
 	@PostMapping(value = "/addmember")
-	public String addmember(@ModelAttribute MemberDto dto) throws IOException {
+	public String addmember(@ModelAttribute @RequestBody MemberDto dto) throws IOException {
 		System.out.println("MemberController addmember " + new Date());
-		
+
 		System.out.println(dto.toString());
-		
+		System.out.println("addmember 실행");
 		boolean b = service.addmember(dto);
+
 		if (!b) {
 			return "NO";
 		}
@@ -161,15 +169,15 @@ public class MemberController {
 		return mem;
 	}
 
-	
+
 	@PostMapping(value = "/login")
-	public MemberDto login(MemberDto dto) {		
+	public MemberDto login(MemberDto dto) {
 		System.out.println("MemberController login " + new Date());
-		
+
 		MemberDto mem = service.login(dto);
-		
-		
-		System.out.println(dto);
+
+
+		System.out.println("login 에서 찍은" + dto);
 //		if (mem != null) {
 //			req.getSession().setAttribute("login", mem);
 //			req.getSession().setMaxInactiveInterval(7200);
@@ -177,56 +185,55 @@ public class MemberController {
 //		}
 		return mem;
 	}
-	
-	
+
+
 	@PostMapping(value = "/updatemember")
-	public String updatemember(@RequestBody MemberDto dto) {
+	public String updatemember(@ModelAttribute @RequestBody MemberDto dto) throws IOException {
 		System.out.println("MemberController updatemember " + new Date());
-		System.out.println(dto);
-		System.out.println(dto.getNickname());
-		
+
 		boolean b = service.updatemember(dto);
-		
+
 		if(!b) {
 			return "NO";
 		}
 		return "YES";
 	}
-	
+
 	@PostMapping(value = "/updatemembernull")
-	public String updatemembernull(@RequestBody MemberDto dto) {
-		System.out.println("updatemembernull updatemember " + new Date());
-		System.out.println(dto);
-		System.out.println(dto.getNickname());
-		System.out.println(dto.getProfile());
+	public String updatemembernull( MemberDto dto) {
+		System.out.println("MemberController updatemembernull " + new Date());
 
-		boolean b = service.updatemember(dto);
+		System.out.println("이미지없는채로수정");
+		boolean b = service.updatemembernull(dto);
 
 		if(!b) {
 			return "NO";
 		}
 		return "YES";
 	}
-	
+
+
 	@PostMapping(value = "/allmember")
-	
+
 	public MemberDto allmember(@RequestBody MemberDto dto) {
-		System.out.println("MemberController allmember " + new Date());
-		
+		// System.out.println("MemberController allmember " + new Date());
+
 		MemberDto mem = service.allmember(dto);
 		return mem;
 	}
-	
-	@GetMapping(value = "/images/{folderName}/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<FileSystemResource> getImage(@PathVariable String folderName, @PathVariable String imageName) {
-        System.out.println("getImage " + new Date());
 
-        String imagePath = localPath + folderName + "/" + imageName;
+	@GetMapping(value = "/images/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<FileSystemResource> getImage( @PathVariable String imageName,
+													   HttpServletRequest req) {
+		String contPath = req.getContextPath();
+		String rootPath = req.getServletContext().getRealPath("testImage");
+		String imagePath = localPath  + imageName;
+		String fileRoot = rootPath + File.separator;
 
-        File imageFile = new File(imagePath);
-        return ResponseEntity.ok()
-                .contentLength(imageFile.length())
-                .body(new FileSystemResource(imageFile));
-    }
-	
+		File imageFile = new File(imagePath);
+		return ResponseEntity.ok().contentLength(imageFile.length()).body(new FileSystemResource(imageFile));
+	}
+
+
+
 }

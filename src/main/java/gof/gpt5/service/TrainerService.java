@@ -35,7 +35,8 @@ public class TrainerService {
     }
 
     public boolean writeTrainer(TrainerDto dto) {
-    	return trainerDao.writeTrainer(dto) > 0;
+
+        return trainerDao.writeTrainer(dto) > 0;
     }
     public boolean updateTrainer(TrainerDto dto) {
         return trainerDao.updateTrainer(dto) > 0;

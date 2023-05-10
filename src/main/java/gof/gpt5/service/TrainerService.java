@@ -52,6 +52,7 @@ public class TrainerService {
         // 좋아요를 누른 상태에서 다시 누르면 좋아요 취소
         if (isLiked) {
             int deleteResult = trainerDao.deleteLike(trainerLikeDto);
+            System.out.println("deleteLike 결과: " + deleteResult); // 로깅 추가
             if (deleteResult > 0) {
                 trainerDao.decreaseLikes(pt_seq);
                 return true;
@@ -61,6 +62,7 @@ public class TrainerService {
         // 좋아요를 누르지 않은 상태에서 누르면 좋아요
         else {
             int addResult = trainerDao.addLike(trainerLikeDto);
+            System.out.println("addLike 결과: " + addResult); // 로깅 추가
             if (addResult > 0) {
                 trainerDao.increaseLikes(pt_seq);
                 return true;

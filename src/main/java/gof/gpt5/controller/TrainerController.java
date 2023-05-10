@@ -11,14 +11,16 @@ import java.nio.file.Paths;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import gof.gpt5.dto.TrainerDto;
+import gof.gpt5.dto.TrainerLikeDto;
 import gof.gpt5.dto.TrainersParam;
 import gof.gpt5.service.TrainerService;
 
@@ -68,7 +70,6 @@ public class TrainerController {
 
         // 이미지 파일을 저장할 파일 객체를 생성
     	File destinationFile = new File(absoluteFolderPath, newFileName);
-//    	File destinationFile = new File(absoluteFolderPath + newFileName);
     	System.out.println("폴더 경로: " + folderPath);
     	System.out.println("절대 폴더 경로: " + absoluteFolderPath);
         try {
@@ -84,10 +85,6 @@ public class TrainerController {
         // 이미지 파일 경로를 TrainerDto에 설정
         dto.setFilename(file.getOriginalFilename());
         dto.setNewfilename( newFileName);
-//        dto.setFilename("resources/static/images/" + file.getOriginalFilename());
-//        dto.setNewfilename("resources/static/images/" + newFileName);
-//        dto.setFilename("images/" + file.getOriginalFilename());
-//        dto.setNewfilename("images/" + newFileName);
 
         
         // 여기에 저장 경로 및 파일 정보 출력 코드 추가
@@ -126,12 +123,13 @@ public class TrainerController {
         return "YES";
     }
     
-    @PostMapping(value = "/toggleLike")
-    public Map<String, Object> toggleLike(@RequestPart("pt_seq") int pt_seq,
-                                          @RequestPart("nickname") String nickname,
-                                          @RequestPart("isLiked") boolean isLiked) {
-
-        boolean success = service.toggleLike(pt_seq, nickname, isLiked);
+    @PostMapping(value = "/toggleLike", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> toggleLike(@RequestBody TrainerLikeDto dto) {
+    	System.out.println("toggleLike 요청: " + dto); // 요청 객체 출력
+        int pt_seq = dto.getPt_seq();
+        String nickname = dto.getNickname();
+        boolean isLiked =! dto.getIsLiked(); // isLiked 값을 가져오기
+        boolean success = service.toggleLike(pt_seq, nickname, isLiked); // isLiked 값을 전달
 
         Map<String, Object> result = new HashMap<>();
         result.put("success", success);
@@ -139,6 +137,8 @@ public class TrainerController {
         if (success) {
             int updatedLikes = service.countLikesByTrainer(pt_seq);
             result.put("updatedLikes", updatedLikes);
+            System.out.println("Toggle Like 호출됨: pt_seq=" + pt_seq + ", nickname=" + nickname + ", isLiked=" + isLiked);
+
         }
 
         return result;

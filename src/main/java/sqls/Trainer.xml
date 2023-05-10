@@ -71,8 +71,8 @@
         WHERE pt_seq=#{pt_seq} AND nickname=#{nickname}
     </delete>
 
-    <select id="getLikeCount" resultType="java.lang.Integer">
-	    SELECT COUNT(*) FROM trainerlike WHERE pt_seq = #{seq} AND del = 0
+    <select id="countLikesByTrainer" resultType="java.lang.Integer">
+	    SELECT COUNT(*) FROM trainerlike WHERE pt_seq = #{seq}
 	</select>
 
     <!-- 좋아요 수 증가 -->

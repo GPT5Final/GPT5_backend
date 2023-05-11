@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.UUID;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import gof.gpt5.dto.TrainerDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class MemberController {
 				sendMail.setSubject("GPT5 인증메일입니다.");
 				sendMail.setText("<h1>GPT5 메일인증</h1>" + "<br><br>" + "<p>이메일 인증코드는 <b>" + mailKey + "</b> 입니다.</p><br>"
 						+ "<p>사이트로 돌아가서 인증코드를 입력해주세요</p>");
-				sendMail.setFrom("mintjd974@naver.com", "GPT5");
+				sendMail.setFrom("dlsco123@naver.com", "GPT5");
 				sendMail.setTo(dto.getEmail());
 				sendMail.send();
 
@@ -84,7 +85,7 @@ public class MemberController {
 					sendMail.setSubject("GPT5 인증메일입니다.");
 					sendMail.setText("<h1>GPT5 메일인증</h1>" + "<br><br>" + "<p>이메일 인증코드는 <b>" + mailKey
 							+ "</b> 입니다.</p><br>" + "<p>사이트로 돌아가서 인증코드를 입력해주세요</p>");
-					sendMail.setFrom("mintjd974@naver.com", "GPT5");
+					sendMail.setFrom("dlsco123@naver.com", "GPT5");
 					sendMail.setTo(dto.getEmail());
 					sendMail.send();
 
@@ -176,8 +177,6 @@ public class MemberController {
 
 		MemberDto mem = service.login(dto);
 
-
-		System.out.println("login 에서 찍은" + dto);
 //		if (mem != null) {
 //			req.getSession().setAttribute("login", mem);
 //			req.getSession().setMaxInactiveInterval(7200);
@@ -236,10 +235,16 @@ public class MemberController {
 		return ResponseEntity.ok().contentLength(imageFile.length()).body(new FileSystemResource(imageFile));
 	}
 
-//	@PostMapping(value = "/delmember")
-//	public String delmember(String email){
-//
-//
-//	}
+	@PostMapping(value = "/delmember")
+	public String delmember(String email){
+		System.out.println("MemberController delmember " + new Date());
+
+		boolean b = service.delmember(email);
+
+		if(!b) {
+			return "NO";
+		}
+		return "YES";
+	}
 
 }

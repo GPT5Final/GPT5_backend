@@ -77,7 +77,6 @@ public class MemberController {
 				sendMail.send();
 
 				return "updateSuccess";
-
 			} else {
 				boolean isS = service.insertEmailKey(dto);
 				if (isS) {
@@ -93,21 +92,14 @@ public class MemberController {
 				} else {
 					return "fail";
 				}
-
 			}
 		}
-
 	}
 
 	@PostMapping(value = "/mailKeyChk")
 	public String mailKeyChk(EmailChkDto dto) throws Exception {
 		System.out.println("MemberController mailKeyChk " + new Date());
-
-		// System.out.println(dto.toString());
-
 		EmailChkDto echk = service.emailKeyChk(dto);
-
-		// System.out.println(dto.getEmailKey());
 
 		if (echk != null) {
 			service.updateMailAuth(dto);
@@ -121,17 +113,12 @@ public class MemberController {
 	@PostMapping(value = "/emailAuthChk")
 	public String emailAuthChk(EmailChkDto dto) {
 		System.out.println("MemberController emailAuthChk " + new Date());
-
 		System.out.println(dto.toString());
-
 		boolean isS = service.emailAuthChk(dto);
-
 		System.out.println(isS);
-
 		if (isS == true) { // 인증완료
 			return "YES";
 		}
-
 		return "NO"; // 인증안함
 	}
 
@@ -236,9 +223,7 @@ public class MemberController {
 	@PostMapping(value = "/delmember")
 	public String delmember(String email){
 		System.out.println("MemberController delmember " + new Date());
-
 		boolean b = service.delmember(email);
-
 		if(!b) {
 			return "NO";
 		}

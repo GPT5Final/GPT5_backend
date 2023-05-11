@@ -9,19 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import gof.gpt5.dao.PaymentDao;
 import gof.gpt5.dto.CoinPaymentDto;
 import gof.gpt5.dto.MemberDto;
-import gof.gpt5.dto.PaymentDto;
+import gof.gpt5.dto.PaymentParamDto;
 
 @Service
 @Transactional
 public class PaymentService {
-	
 	@Autowired
 	PaymentDao dao;
-	
-	public boolean addPayment(PaymentDto dto) {
-		int n = dao.addPayment(dto);
-		return n > 0 ? true : false;
-	}
 	
 	public boolean addCoinPayment(CoinPaymentDto dto) {
 		int n = dao.addCoinPayment(dto);
@@ -36,7 +30,12 @@ public class PaymentService {
 		dao.updateSellerCoin(dto);
 	}
 	
-	public List<PaymentDto> getPaymentBbs(MemberDto dto){
-		return dao.getPaymentBbs(dto);
+	public List<CoinPaymentDto> getPaymentBbs(PaymentParamDto param){
+		return dao.getPaymentBbs(param);
 	}
+	
+	public int getPaymentCount(PaymentParamDto param) {
+		return dao.getPaymentCount(param);
+	}
+
 }

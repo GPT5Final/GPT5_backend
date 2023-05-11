@@ -7,18 +7,20 @@ import org.springframework.stereotype.Repository;
 
 import gof.gpt5.dto.CoinPaymentDto;
 import gof.gpt5.dto.MemberDto;
-import gof.gpt5.dto.PaymentDto;
+import gof.gpt5.dto.PaymentParamDto;
 
 @Mapper
 @Repository
 public interface PaymentDao {
-	int addPayment(PaymentDto dto);
-	
+
 	int addCoinPayment(CoinPaymentDto dto);
-	
+
 	void updateBuyerCoin(MemberDto dto);
-	
+
 	void updateSellerCoin(MemberDto dto);
 	
-	List<PaymentDto> getPaymentBbs(MemberDto dto);
+	List<CoinPaymentDto> getPaymentBbs(PaymentParamDto param);
+	
+	int getPaymentCount(PaymentParamDto param);
+
 }

@@ -177,6 +177,8 @@ public class MemberController {
 	public String updatemember(@ModelAttribute @RequestBody MemberDto dto) throws IOException {
 		System.out.println("MemberController updatemember " + new Date());
 
+		System.out.println(dto.toString());
+		
 		boolean b = service.updatemember(dto);
 
 		if(!b) {

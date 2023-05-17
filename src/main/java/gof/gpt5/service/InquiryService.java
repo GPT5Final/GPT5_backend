@@ -47,4 +47,6 @@ public class InquiryService {
 		return n > 0 ? true : false;
 	}
 	
+	
+	
 }

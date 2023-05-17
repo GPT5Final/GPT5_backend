@@ -22,5 +22,5 @@ public interface InquiryDao {
 	
 	InquiryBbsDto getInquiryBbs (int seq);
 	
-	int deleteInquiryBbs (InquiryBbsDto dto);
+	int deleteInquiryBbs (int seq);
 }

@@ -42,8 +42,8 @@ public class InquiryService {
 		return dao.getInquiryBbs(seq);
 	}
 	
-	public boolean deleteInquiryBbs(InquiryBbsDto dto) {
-		int n = dao.deleteInquiryBbs(dto);
+	public boolean deleteInquiryBbs(int seq) {
+		int n = dao.deleteInquiryBbs(seq);
 		return n > 0 ? true : false;
 	}
 	

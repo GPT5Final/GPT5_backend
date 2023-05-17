@@ -48,7 +48,7 @@ public class InquiryController {
 		return "FAIL";
 	}
 
-	@PostMapping(value = "/fileUpload")
+	@PostMapping(value = "/imgFileUpload")
 	public String fileUpload(InquiryBbsDto dto, @RequestParam("files") List<MultipartFile> files,
 			HttpServletRequest req) throws Exception {
 		// System.out.println("InquiryController fileUpload " + new Date());
@@ -139,36 +139,53 @@ public class InquiryController {
 
 		String filenames = dto.getFilename();
 
-		String[] fileArr = filenames.split("\\+");
+		if (filenames != null) {
+			String[] fileArr = filenames.split("\\+");
 
-		List<String> list = new ArrayList<>();
+			List<String> list = new ArrayList<>();
 
-		for (String filename : fileArr) {
-			list.add(filename);
-		}
+			for (String filename : fileArr) {
+				list.add(filename);
+			}
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("list", list);
+			map.put("dto", dto);
+			
+			return map;
 
-		Map<String, Object> map = new HashMap<>();
-		map.put("list", list);
-		map.put("dto", dto);
-
-		return map;
+		}else {
+			filenames = "89b3e1dc_이미지없음.png";
+			
+			List<String> list = new ArrayList<>();
+			
+			list.add(filenames);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("list", list);
+			map.put("dto", dto);
+			
+			
+			return map;
+		}	
+	
 	}
 	
+
 	@PostMapping(value = "/deleteInquiryBbs")
-	public String deleteInquiryBbs(InquiryBbsDto dto) {
+	public String deleteInquiryBbs(int seq) {
 		System.out.println("InquiryController deleteInquiryBbs " + new Date());
-		
-		System.out.println(dto);
-		
-		
-		boolean isS = service.deleteInquiryBbs(dto);
-		
-		if(isS) {
+
+		System.out.println(seq);
+
+		boolean isS = service.deleteInquiryBbs(seq);
+
+		if (isS) {
 			return "SUCCESS";
 		}
-		
+
 		return "FAIL";
-		
+
 	}
 
 }

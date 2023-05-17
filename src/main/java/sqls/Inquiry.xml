@@ -77,7 +77,7 @@
 		where seq = #{seq}
 	</select>
 
-	<delete id="deleteInquiryBbs" parameterType="gof.gpt5.dto.InquiryBbsDto">
+	<delete id="deleteInquiryBbs" parameterType="Integer">
 		delete from inq_bbs
 		where seq = #{seq}
 	</delete>

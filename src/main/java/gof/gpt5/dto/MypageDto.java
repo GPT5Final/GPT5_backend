@@ -2,12 +2,11 @@ package gof.gpt5.dto;
 
 import java.io.Serializable;
 
-public class MypagecalDto implements Serializable {
+public class MypageDto implements Serializable {
     private String email;
     private String event;
     private String dateandtime;
-
-    public MypagecalDto(){
+    public MypageDto(){
 
     }
 
@@ -37,7 +36,7 @@ public class MypagecalDto implements Serializable {
 
     @Override
     public String toString() {
-        return "MypagecalDto{" +
+        return "MypageDto{" +
                 "email='" + email + '\'' +
                 ", event='" + event + '\'' +
                 ", dateandtime='" + dateandtime + '\'' +

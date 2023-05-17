@@ -1,19 +1,20 @@
 package gof.gpt5.service;
 
-import gof.gpt5.dao.MypagecalDao;
-import gof.gpt5.dto.MypagecalDto;
+import gof.gpt5.dao.MypageDao;
+import gof.gpt5.dto.MypageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class MypagecalService {
+public class MypageService {
     @Autowired
-    MypagecalDao dao;
+    MypageDao dao;
 
-    public boolean addcal(MypagecalDto dto){
+    public boolean addcal(MypageDto dto){
         int n = dao.addcal(dto);
         return n > 0?true:false;
     }
+
 }

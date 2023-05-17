@@ -61,10 +61,11 @@ public class PaymentController {
 			param.setStart(start);
 			param.setEnd(end);
 			
+			System.out.println(param.toString());
 			List<CoinPaymentDto> list = service.getPaymentBbs(param);
 			int len = service.getPaymentCount(param);
 			
-			System.out.println(list);
+			//System.out.println(list);
 			
 			Map<String, Object> map = new HashMap<>();
 			map.put("list", list);

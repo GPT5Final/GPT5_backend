@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gof.gpt5.dao.InquiryDao">
+
+	<insert id="addInquiryBbs"
+		parameterType="gof.gpt5.dto.InquiryBbsDto">
+		insert into inq_bbs(nickname, category,
+		title, content,
+		filename, wdate)
+		values(#{nickname},
+		#{category},
+		#{title}, #{content},
+		#{filename},
+		now())
+	</insert>
+
+	<insert id="addInquiryFileBbs"
+		parameterType="gof.gpt5.dto.InquiryBbsDto">
+		insert into inq_bbs(nickname, category,
+		title, content,
+		filename, wdate)
+		values(#{nickname},
+		#{category},
+		#{title}, #{content},
+		#{filename}, now())
+	</insert>
+
+
+
+	<select id="InquiryBbs"
+		parameterType="gof.gpt5.dto.InquiryParamDto"
+		resultType="gof.gpt5.dto.InquiryBbsDto">
+		select seq, nickname, category, title, content,
+		wdate
+		from
+		(select
+		row_number()over(order by wdate desc) as rnum, seq, nickname,
+		category, title, content, wdate
+		from inq_bbs
+		where nickname =
+		#{nickname}
+		<if
+			test="choice != null and choice != '' and search != null and search != ''">
+			<if test="choice == 'category'">
+				and category like concat('%', #{search} ,'%')
+			</if>
+
+			<if test="choice == 'title'">
+				and title like concat('%', #{search} ,'%')
+			</if>
+		</if>
+		) a
+		where rnum between ${start} and ${end}
+	</select>
+
+
+	<select id="getInquiryCount"
+		parameterType="gof.gpt5.dto.InquiryParamDto" resultType="Integer">
+		select
+		ifnull(count(*), 0)
+		from inq_bbs
+		where nickname = #{nickname}
+		<if test="choice == 'category'">
+			and category like concat('%', #{search} ,'%')
+		</if>
+		<if test="choice == 'title'">
+			and title like concat('%', #{search} ,'%')
+		</if>
+	</select>
+
+	<select id="getInquiryBbs" parameterType="Integer"
+		resultType="gof.gpt5.dto.InquiryBbsDto">
+		select *
+		from inq_bbs
+		where seq = #{seq}
+	</select>
+
+	<delete id="deleteInquiryBbs" parameterType="gof.gpt5.dto.InquiryBbsDto">
+		delete from inq_bbs
+		where seq = #{seq}
+	</delete>
+</mapper>

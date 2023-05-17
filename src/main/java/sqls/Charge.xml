@@ -5,7 +5,6 @@
 
 <mapper namespace="gof.gpt5.dao.ChargeDao">
 
-
 	<!-- 코인 충전 내역 -->
 	<insert id="addChargeBbs" parameterType="gof.gpt5.dto.ChargeDto">
 		insert into

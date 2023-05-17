@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import gof.gpt5.dto.CoinPaymentDto;
-import gof.gpt5.dto.MemberDto;
+
 import gof.gpt5.dto.ChargeDto;
 import gof.gpt5.dto.ChargeParamDto;
 import gof.gpt5.service.ChargeService;
@@ -41,6 +40,7 @@ public class ChargeController {
 		System.out.println("ChargeController getPaymentBbs " + new Date());
 
 		int pn = param.getPageNumber();
+		System.out.println(pn);
 		int start = 1 + (pn * 10);
 		int end = (pn + 1) * 10;
 

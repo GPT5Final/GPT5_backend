@@ -319,7 +319,7 @@ public class NaverCloud {
         } catch (Exception e){
             System.out.println(e);
         }
-        System.out.println("베이스64"+encodeBase64String);
+
         return encodeBase64String;
 
     }

@@ -193,7 +193,7 @@ public class MemberController {
 
 		System.out.println("이미지없는채로수정");
 		boolean b = service.updatemembernull(dto);
-
+		System.out.println(dto);
 		if(!b) {
 			return "NO";
 		}

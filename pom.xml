@@ -76,6 +76,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
+
+		</dependency>
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>mySample01Application</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>springBootNaverCloud</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+      
 		</dependency>		
 		<dependency>
 		    <groupId>org.json</groupId>
@@ -88,6 +102,7 @@
 		    <artifactId>android-util</artifactId>
 		    <version>2.7.1</version>
 		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

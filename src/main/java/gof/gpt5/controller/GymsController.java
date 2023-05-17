@@ -1,13 +1,17 @@
 package gof.gpt5.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import gof.gpt5.naver.NaverCloud;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,11 +25,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gof.gpt5.dto.GimageDto;
 import gof.gpt5.dto.GymsDto;
 import gof.gpt5.dto.GymsLikeDto;
-import gof.gpt5.dto.ImageDto;
-import gof.gpt5.dto.TrainerDto;
-import gof.gpt5.dto.TrainerLikeDto;
 import gof.gpt5.dto.TrainersParam;
 import gof.gpt5.service.GymsService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 public class GymsController {
@@ -231,4 +233,30 @@ public class GymsController {
 
         return result;
     }
+    
+  //TODO OD(Object Detection)
+  	@PostMapping(value = "od_fileUpload")
+  	public String od_fileUpload(@RequestParam("uploadFile")MultipartFile uploadFile,
+  								HttpServletRequest req ) {
+  		System.out.println("NaverCloudController Obj_Detection" + new Date());
+  		
+  		String uploadpath = req.getServletContext().getRealPath("/upload");
+  		
+  		String filename = uploadFile.getOriginalFilename();
+  		String filepath = uploadpath + "/" + filename;
+  		
+  		System.out.println(filepath);
+  		
+  		try {
+  			BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(new File(filepath)));
+  			os.write(uploadFile.getBytes());
+  			os.close();
+  			
+  		} catch (Exception e) {
+  			e.printStackTrace();
+  			return "fail";
+  		}
+  		String resp = NaverCloud.ObjectDetection(filepath);		
+  		return resp;
+  	}
 }

@@ -25,9 +25,29 @@
 					</if>										
 			</if>					
 	</select>
+	
+	
+	<!-- 이미지 관련 -->
+	<insert id="writeImageInfo" parameterType="gof.gpt5.dto.ImageDto">
+	    INSERT INTO pt_images (trainer_seq, filename, newfilename, filesize)
+	    VALUES (#{trainerSeq}, #{filename}, #{newfilename}, #{filesize})
+	</insert>
+	
+	<select id="getFirstImage" parameterType="java.lang.Integer" resultType="gof.gpt5.dto.ImageDto">
+        SELECT *
+        FROM pt_images
+        WHERE id = (SELECT MIN(id) FROM pt_images WHERE trainer_seq = #{seq})
+        LIMIT 1
+    </select>
+    
+    <select id="getAllImages" parameterType="java.lang.Integer" resultType="gof.gpt5.dto.ImageDto">
+        SELECT *
+        FROM pt_images
+        WHERE trainer_seq = #{seq}
+    </select>
 
     <!-- 트레이너 글 작성 -->
-    <insert id="writeTrainer" parameterType="gof.gpt5.dto.TrainerDto">    
+    <insert id="writeTrainer" parameterType="gof.gpt5.dto.TrainerDto" useGeneratedKeys="true" keyProperty="seq">    
    		INSERT INTO pt(nickname, title, content, filename, newfilename, filesize, love, wip, readcount, downcount, regdate, del, ref, step, depth)         
     	VALUES(#{nickname}, #{title}, #{content}, #{filename}, #{newfilename}, #{filesize}, 0, #{wip}, 0, 0, NOW(), 0, (SELECT IFNULL(MAX(ref), 0) + 1 FROM (SELECT * FROM pt) AS temp), 0, 0)
 	</insert>
@@ -39,6 +59,14 @@
         FROM pt
         WHERE seq = #{seq}
     </select>
+    
+    <select id="getTopTrainer" resultType="gof.gpt5.dto.TrainerDto">
+	    SELECT *
+	    FROM pt
+	    WHERE del = 0
+	    ORDER BY love DESC
+	    LIMIT 1
+	</select>
 
     <!-- 트레이너 글 수정 -->
     <update id="updateTrainer" parameterType="gof.gpt5.dto.TrainerDto">
@@ -58,17 +86,17 @@
     <select id="checkUserLikeStatus" resultType="int">
         SELECT COUNT(*)
         FROM trainerlike
-        WHERE pt_seq=#{pt_seq} AND nickname=#{nickname}
+        WHERE pt_seq=#{ptSeq} AND nickname=#{nickname}
     </select>
     
     <insert id="addLike" parameterType="gof.gpt5.dto.TrainerLikeDto">
         INSERT INTO trainerlike(pt_seq, nickname)
-        VALUES(#{pt_seq}, #{nickname})
+        VALUES(#{ptSeq}, #{nickname})
     </insert>
 
     <delete id="deleteLike" parameterType="gof.gpt5.dto.TrainerLikeDto">
         DELETE FROM trainerlike
-        WHERE pt_seq=#{pt_seq} AND nickname=#{nickname}
+        WHERE pt_seq=#{ptSeq} AND nickname=#{nickname}
     </delete>
 
     <select id="countLikesByTrainer" resultType="java.lang.Integer">
@@ -88,5 +116,9 @@
 		SET love = love - 1
 		WHERE seq = #{seq}
 	</update>
+	
+	<select id="existsPtSeq" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    	SELECT COUNT(*) FROM pt WHERE seq = #{seq}
+	</select>
 
 </mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gof.gpt5.dao.ChargeDao">
+
+	<!-- 코인 충전 내역 -->
+	<insert id="addChargeBbs" parameterType="gof.gpt5.dto.ChargeDto">
+		insert into
+		payment(NICKNAME, amount, orderid, ordername, paymentkey, wdate)
+		values(#{nickname}, #{amount}, #{orderid}, #{ordername},
+		#{paymentkey}, now())
+	</insert>
+
+	<select id="getChargeBbs"
+		parameterType="gof.gpt5.dto.ChargeParamDto"
+		resultType="gof.gpt5.dto.ChargeDto">
+		select nickname, amount, orderid, ordername, paymentkey,
+		wdate
+		from (select row_number()over(order by wdate desc) as rnum,
+		nickname, amount, orderid, ordername, paymentkey, wdate
+		from payment
+		where
+		nickname = #{nickname}) a
+		where rnum between #{start} and #{end}
+	</select>
+
+	<select id="getChargeCount"
+		parameterType="gof.gpt5.dto.MemberDto" resultType="Integer">
+		select
+		ifnull(count(*), 0)
+		from payment
+		where nickname = #{nickname}
+	</select>
+
+</mapper>

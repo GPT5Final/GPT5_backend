@@ -1,6 +1,6 @@
 package gof.gpt5.dto;
 
-public class PaymentDto {
+public class ChargeDto {
 	private String nickname;
 	private int amount;
 	private String orderid;
@@ -8,10 +8,10 @@ public class PaymentDto {
 	private String paymentkey;
 	private String wdate;
 
-	public PaymentDto() {
+	public ChargeDto() {
 	}
 
-	public PaymentDto(String nickname, int amount, String orderid, String ordername, String paymentkey, String wdate) {
+	public ChargeDto(String nickname, int amount, String orderid, String ordername, String paymentkey, String wdate) {
 		super();
 		this.nickname = nickname;
 		this.amount = amount;

@@ -2,9 +2,9 @@ package gof.gpt5.dto;
 
 import java.util.List;
 
-public class TrainerDto {
+public class GymsDto {
 
-    private int seq;
+    private int gSeq;
     private String nickname;
     private String title;
     private String content;
@@ -21,17 +21,15 @@ public class TrainerDto {
     private int step;
     private int depth;
     
-    private List<ImageDto> images;
-    private ImageDto firstImage;
+    private List<GimageDto> images;
+    private GimageDto firstImage;
 
-    public List<ImageDto> getImages() {
-        return images;
-    }
     
-    public TrainerDto() {
+    
+    public GymsDto() {
 	}    
     
-	public TrainerDto(String nickname, String title, String content, String filename) {
+	public GymsDto(String nickname, String title, String content, String filename) {
 		super();
 		this.nickname = nickname;
 		this.title = title;
@@ -39,11 +37,11 @@ public class TrainerDto {
 		this.filename = filename;
 	}
 	
-	public TrainerDto(int seq, String nickname, String title, String content, String filename, String newfilename,
+	public GymsDto(int gSeq, String nickname, String title, String content, String filename, String newfilename,
 			int filesize, int love, String wip, int readcount, int downcount, String regdate, int del, int ref,
 			int step, int depth) {
 		super();
-		this.seq = seq;
+		this.gSeq = gSeq;
 		this.nickname = nickname;
 		this.title = title;
 		this.content = content;
@@ -61,11 +59,11 @@ public class TrainerDto {
 		this.depth = depth;
 	}
 
-	public int getSeq() {
-		return seq;
+	public int getgSeq() {
+		return gSeq;
 	}
-	public void setSeq(int seq) {
-		this.seq = seq;
+	public void setgSeq(int gSeq) {
+		this.gSeq = gSeq;
 	}
 	public String getNickname() {
 		return nickname;
@@ -158,21 +156,27 @@ public class TrainerDto {
 		this.depth = depth;
 	}
 	
+	
 	// 이미지 관련
-	public void setImages(List<ImageDto> images) {
+	public List<GimageDto> getImages() {
+        return images;
+    }
+	public void setImages(List<GimageDto> images) {
         this.images = images;
     }
 	
-	public ImageDto getFirstImage() {
+	public GimageDto getFirstImage() {
 	    return this.firstImage;
 	}
 	
-	public void setFirstImage(ImageDto firstImage) {
+	public void setFirstImage(GimageDto firstImage) {
 	    this.firstImage = firstImage;
 	}
+	
+	
 	@Override
 	public String toString() {
-		return "TrainerDto [seq=" + seq + ", nickname=" + nickname + ", title=" + title + ", content=" + content
+		return "GymsDto [gSeq=" + gSeq + ", nickname=" + nickname + ", title=" + title + ", content=" + content
 				+ ", filename=" + filename + ", newfilename=" + newfilename + ", filesize=" + filesize + ", love="
 				+ love + ", wip=" + wip + ", readcount=" + readcount + ", downcount=" + downcount + ", regdate="
 				+ regdate + ", del=" + del + ", ref=" + ref + ", step=" + step + ", depth=" + depth + "]";

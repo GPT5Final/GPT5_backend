@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="gof.gpt5.dao.GymsDao">
+
+    <!-- Gyms 목록 -->
+    <select id="gymslist" parameterType="gof.gpt5.dto.TrainersParam" resultType="gof.gpt5.dto.GymsDto">
+        SELECT *
+        FROM gyms
+        WHERE del = 0
+        ORDER BY regdate DESC
+    </select>
+    
+    <select id="getAllGyms" parameterType="gof.gpt5.dto.TrainersParam" resultType="java.lang.Integer">
+		select ifnull(count(*), 0)
+		from gyms		
+			<if test="choice != null and choice != '' and search != null and search != '' ">
+					<if test="choice == 'title'">
+						where title like concat('%', #{search}, '%') and del=0
+					</if>
+					
+					<if test="choice == 'content'">
+						where content like concat('%', #{search}, '%') and del=0
+					</if>										
+			</if>					
+	</select>
+	
+	<select id="getTopGym" resultType="gof.gpt5.dto.TrainerDto">
+	    SELECT *
+	    FROM gyms
+	    WHERE del = 0
+	    ORDER BY love DESC
+	    LIMIT 6
+	</select>
+
+    <!-- Gym 작성 -->
+    <insert id="writeGym" parameterType="gof.gpt5.dto.GymsDto" useGeneratedKeys="true" keyProperty="gSeq">
+        INSERT INTO gyms(nickname, title, content, filename, newfilename, filesize, love, wip, readcount, downcount, regdate, del, ref, step, depth)         
+    	VALUES(#{nickname}, #{title}, #{content}, #{filename}, #{newfilename}, #{filesize}, 0, #{wip}, 0, 0, NOW(), 0, (SELECT IFNULL(MAX(ref), 0) + 1 FROM (SELECT * FROM gyms) AS temp), 0, 0)
+	</insert>
+
+    <!-- Gyms 상세보기 -->
+    <select id="getGym" parameterType="java.lang.Integer" resultType="gof.gpt5.dto.GymsDto">
+        SELECT *
+        FROM gyms
+        WHERE g_seq = #{gSeq}
+    </select>
+
+    <!-- Gyms 수정 -->
+    <update id="updateGym" parameterType="gof.gpt5.dto.GymsDto">
+        UPDATE gyms
+        SET content = #{content}, filename = #{filename}, newfilename = #{newfilename}
+        WHERE g_seq = #{gSeq}
+    </update>
+
+    <!-- Gyms 삭제 -->
+    <update id="deleteGym" parameterType="java.lang.Integer">
+        UPDATE gyms
+        SET del = 1
+        WHERE g_seq = #{gSeq}
+    </update>
+    
+    
+    <!-- 이미지 관련 -->
+	<insert id="writeImageInfo" parameterType="gof.gpt5.dto.GimageDto">
+	    INSERT INTO g_images (gim_seq, filename, newfilename, filesize)
+	    VALUES (#{gimSeq}, #{filename}, #{newfilename}, #{filesize})
+	</insert>
+	
+	<select id="getFirstImage" parameterType="java.lang.Integer" resultType="gof.gpt5.dto.GimageDto">
+        SELECT *
+        FROM g_images
+        WHERE id = (SELECT MIN(id) FROM g_images WHERE gim_seq = #{gSeq})
+        LIMIT 1
+    </select>     
+    
+    <select id="getAllImages" parameterType="java.lang.Integer" resultType="gof.gpt5.dto.GimageDto">
+        SELECT *
+        FROM g_images
+        WHERE gim_seq = #{gSeq}
+    </select>
+    
+    
+    
+    
+    
+    
+    <!-- 이하 좋아요 관련 -->
+    <select id="checkUserLikeStatus" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM gymslike
+        WHERE gym_seq=#{gymSeq} AND nickname=#{nickname}
+    </select>
+
+    <insert id="addLike" parameterType="gof.gpt5.dto.GymsLikeDto">
+        INSERT INTO gymslike(gym_seq, nickname)
+        VALUES(#{gymSeq}, #{nickname})
+    </insert>
+
+    <delete id="deleteLike" parameterType="gof.gpt5.dto.GymsLikeDto">
+        DELETE FROM gymslike
+        WHERE gym_seq=#{gymSeq} AND nickname=#{nickname}
+    </delete>
+
+    <select id="countLikesByGyms" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM gymslike WHERE gym_seq = #{gSeq}
+    </select>
+
+    
+    <update id="increaseLikes" parameterType="java.lang.Integer">
+        UPDATE gyms
+        SET love = love + 1
+        WHERE g_seq = #{gSeq}
+    </update>
+    
+     
+    <update id="decreaseLikes" parameterType="java.lang.Integer">
+		UPDATE gyms
+		SET love = love - 1
+		WHERE g_seq = #{gSeq}
+	</update>
+	
+	<select id="existsGymSeq" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    	SELECT COUNT(*) FROM gyms WHERE g_seq = #{gSeq}
+	</select>
+	
+
+</mapper>

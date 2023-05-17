@@ -5,15 +5,6 @@
 
 <mapper namespace="gof.gpt5.dao.PaymentDao">
 
-
-	<!-- 코인 충전 내역 -->
-	<insert id="addPayment" parameterType="gof.gpt5.dto.PaymentDto">
-		insert into
-		payment(NICKNAME, amount, orderid, ordername, paymentkey, wdate)
-		values(#{nickname}, #{amount}, #{orderid}, #{ordername},
-		#{paymentkey}, now())
-	</insert>
-
 	<!-- 코인 결제 내역 -->
 	<insert id="addCoinPayment"
 		parameterType="gof.gpt5.dto.CoinPaymentDto">
@@ -44,10 +35,23 @@
 	</update>
 
 	<select id="getPaymentBbs"
-		parameterType="gof.gpt5.dto.MemberDto" resultType="gof.gpt5.dto.PaymentDto">
-		select nickname, amount, orderid, ordername, paymentkey, wdate
-		from payment
-		where nickname = #{nickname}
+		parameterType="gof.gpt5.dto.PaymentParamDto"
+		resultType="gof.gpt5.dto.CoinPaymentDto">
+		select paymentkey, amount, buyer, seller, ordername,
+		wdate
+		from (select row_number()over(order by wdate desc) as rnum,
+		paymentkey, amount, buyer, seller, ordername, wdate
+		from coinpayment
+		where buyer = #{buyer}) a
+		where rnum between #{start} and #{end};
+	</select>
+
+	<select id="getPaymentCount"
+		parameterType="gof.gpt5.dto.PaymentParamDto" resultType="Integer">
+		select
+		ifnull(count(*), 0)
+		from coinpayment
+		where buyer = #{buyer}
 	</select>
 
 </mapper>

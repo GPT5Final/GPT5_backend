@@ -1,17 +1,22 @@
 package gof.gpt5.dto;
 
+
 public class TrainerLikeDto {
     private int id;            // 좋아요 고유 ID
-    private int pt_seq;        // 게시물 seq
+    private int ptSeq;        // 게시물 seq
     private String nickname;   // 게시물을 좋아한 회원의 닉네임  
     private boolean isLiked;
 
     public TrainerLikeDto() {
     }
-
-    public TrainerLikeDto(int id, int pt_seq, String nickname) {
-        this.id = id;
-        this.pt_seq = pt_seq;
+    
+    public TrainerLikeDto(int ptSeq, String nickname) {
+        this.ptSeq = ptSeq;
+        this.nickname = nickname;
+    }
+    
+    public TrainerLikeDto(int id, int ptSeq, String nickname) {
+        this.ptSeq = ptSeq;
         this.nickname = nickname;
     }
 
@@ -23,16 +28,16 @@ public class TrainerLikeDto {
         this.id = id;
     }
 
-    public int getPt_seq() {
-        return pt_seq;
+    public int getptSeq() {
+        return ptSeq;
     }
     
     public boolean getIsLiked() {
         return isLiked;
     }
 
-    public void setPt_seq(int pt_seq) {
-        this.pt_seq = pt_seq;
+    public void setptSeq(int ptSeq) {
+        this.ptSeq = ptSeq;
     }
 
     public String getNickname() {
@@ -48,7 +53,7 @@ public class TrainerLikeDto {
 
 	@Override
 	public String toString() {
-		return "TrainerLikeDto [id=" + id + ", pt_seq=" + pt_seq + ", nickname=" + nickname + ", isLiked=" + isLiked
+		return "TrainerLikeDto [id=" + id + ", ptSeq=" + ptSeq + ", nickname=" + nickname + ", isLiked=" + isLiked
 				+ "]";
 	}
 

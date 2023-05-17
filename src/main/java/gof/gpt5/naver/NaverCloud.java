@@ -135,7 +135,10 @@ public class NaverCloud {
 
         return result;
     }
+    
+    //TODO OD
     public static String ObjectDetection(String filepath) {
+//    	StringBuffer reqStr = new StringBuffer();
         String clientId = "o2jlgkap0z";// 애플리케이션 클라이언트 아이디값";
         String clientSecret = "anAVrFaEWV7vRZ9B893ZNjCBavlniiNrj7OAmUhO";// 애플리케이션 클라이언트 시크릿값";
 
@@ -170,6 +173,7 @@ public class NaverCloud {
             FileInputStream inputStream = new FileInputStream(uploadFile);
             byte[] buffer = new byte[4096];
             int bytesRead = -1;
+            
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, bytesRead);
             }
@@ -193,15 +197,17 @@ public class NaverCloud {
                     response.append(inputLine);
                 }
                 br.close();
-
                 System.out.println(response.toString());
             }
+//            } else {
+//                System.out.println("error !!!");
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
-
         return response.toString();
     }
+        
     private static void writeMultiPart(OutputStream out, String jsonMessage, File file, String boundary)
             throws IOException {
         StringBuilder sb = new StringBuilder();

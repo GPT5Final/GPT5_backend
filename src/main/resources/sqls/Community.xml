@@ -5,48 +5,74 @@
 <mapper namespace="gof.gpt5.dao.CommunityDao">
 
 	<!-- 커뮤니티 목록 -->
-	<select id="Communitylist"
-		parameterType="gof.gpt5.dto.CommunityParam"
-		resultType="gof.gpt5.dto.CommunityDto">
-		SELECT *
-		FROM community
-		WHERE del = 0
-		ORDER BY regdate DESC
+	<select id="Communitylist" parameterType="gof.gpt5.dto.CommunityParam" resultType="gof.gpt5.dto.CommunityDto">
+	  SELECT seq, email, nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+	         tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+	  FROM
+	  (
+	    SELECT row_number() over(order by wdate desc) as rnum,
+	           seq, email, nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+	           tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+	    FROM community
+	    WHERE category IN ('인증멘토', '멘토&amp;멘티') AND del = 1
+	    <if test="choice != null and choice != '' and search != null and search != ''">
+	      <if test="choice == 'title'">
+	        and title like concat('%', #{search}, '%')
+	      </if>
+	      <if test="choice == 'content'">
+	        and content like concat('%', #{search}, '%')
+	      </if>
+	      <if test="choice == 'nickname'">
+	        and nickname like concat('%', #{search}, '%')
+	      </if>
+	      <if test="choice == 'location'">
+	        and location like concat('%', #{search}, '%')
+	      </if>
+	    </if>
+	    ORDER BY wdate DESC
+	  ) A
+	  WHERE rnum BETWEEN ${start} AND ${end}
 	</select>
 
-	<select id="getAllCommunity"
-		parameterType="gof.gpt5.dto.CommunityParam"
-		resultType="java.lang.Integer">
-		select ifnull(count(*), 0)
-		from pt
-		<if
-			test="choice != null and choice != '' and search != null and search != '' ">
-			<if test="choice == 'title'">
-				where title like concat('%', #{search}, '%') and del=0
-			</if>
 
-			<if test="choice == 'content'">
-				where content like concat('%', #{search}, '%') and del=0
-			</if>
-		</if>
+	<!-- 글의 총수 -->
+	<select id="getAllCommunity"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="java.lang.Integer">
+		select ifnull(count(*), 0)
+		from community
+		where 1=1
+		 <if test="choice != null and choice != '' and search != null and search != '' ">
+		 	<if test="choice == 'title'">
+		 		and title like concat('%', #{search}, '%') and del=0
+		 	</if>
+		 	<if test="choice == 'content'">
+		 		and content like concat('%', #{search}, '%') and del=0
+		 	</if>
+		 	<if test="choice == 'nickname'">
+		 		and nickname like concat('%', #{search}, '%') and del=0
+		 	</if>
+		 	<if test="choice == 'location'">
+		 		and location like concat('%', #{search}, '%') and del=0
+		 	</if>	
+		 </if>	
 	</select>
 
 	<!-- 커뮤니티 글 작성 -->
-	<insert id="writeCommunity"
-		parameterType="gof.gpt5.dto.CommunityDto">
-		INSERT INTO community(email, nickname, groupname, career, stime, etime,
-		category, banner, price, location, title, content, tag1, tag2, tag3, wdate, del,
-		readcount, likecount, ref, step, depth)
-		VALUES(#{email},#{nickname},#{groupname},#{career},#{stime},#{etime},#{category},#{banner},#{price},#{location},
-		#{title}, #{content}, #{tag1}, #{tag2}, #{tag3}, NOW(), 0, 0, 0, (SELECT IFNULL(MAX(ref),
-		0) + 1 FROM (SELECT * FROM pt) AS temp), 0, 0)
+	<insert id="writeCommunity"	parameterType="gof.gpt5.dto.CommunityDto">
+		INSERT INTO community(email, nickname, memail, mnickname, groupname, career, stime, etime,	category, banner, price, location, title,
+		content, tag1, tag2, tag3, wdate, del,	readcount, likecount, ref, step, depth)
+		VALUES(#{email},#{nickname},#{memail},#{mnickname},#{groupname},#{career},#{stime},#{etime},#{category},#{banner},#{price},#{location},
+		#{title}, #{content}, #{tag1}, #{tag2}, #{tag3}, NOW(), 0, 0, 0,
+		(SELECT IFNULL(MAX(ref),
+		0) + 1 FROM (SELECT * FROM community) AS
+		temp), 0, 0)
 	</insert>
-
 
 	<!-- 커뮤니티 글 상세보기 -->
 	<select id="getCommunity" parameterType="java.lang.Integer"
 		resultType="gof.gpt5.dto.CommunityDto">
-		SELECT *
+		SELECT seq, email, nickname, memail, mnickname, groupname, career, stime, etime,	category, banner, price, location, title,
+		content, tag1, tag2, tag3, wdate, del,	readcount, likecount, ref, step, depth
 		FROM community
 		WHERE seq = #{seq}
 	</select>
@@ -54,9 +80,255 @@
 	<!-- 커뮤니티 글 삭제 -->
 	<update id="deleteCommunity" parameterType="java.lang.Integer">
 		UPDATE community
-		SET del = 1
+		SET	del = 1
 		WHERE seq = #{seq}
 	</update>
+	
+	<!-- 커뮤니티 글 수정 -->
+	<update id="updateCommunity" parameterType="gof.gpt5.dto.CommunityDto">
+	  UPDATE community
+	  SET memail = #{memail},
+	      mnickname = #{mnickname}
+
+	  WHERE seq = #{seq} 
+	</update>
+	
+	<!-- 배너 목록 -->
+	<select id="Bannerlist"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="gof.gpt5.dto.CommunityDto">
+		SELECT seq, email, nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+		tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM
+		(SELECT row_number()over(order by wdate desc) as rnum, 
+			seq, email,	nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+			tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM community
+		WHERE 1=1
+		ORDER BY wdate DESC) A
+		WHERE rnum BETWEEN ${start} AND ${end}
+	</select>	
+		
+	<!-- 배너 총수 -->
+	<select id="getAllBanner"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="java.lang.Integer">
+		select ifnull(count(*), 0)
+		from community
+		where 1=1
+	</select>
+	
+	<!-- 홈 목록 -->
+	<select id="Homelist"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="gof.gpt5.dto.CommunityDto">
+		SELECT seq, email, nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+		tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM
+		(SELECT row_number()over(order by wdate desc) as rnum, 
+			seq, email,	nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+			tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM community
+		WHERE category IN ('인증멘토', '멘토&amp;멘티') AND del = 0
+			<if test="choice != null and choice != '' and search != null and search != '' ">
+				<if test="choice == 'title'">
+					AND title LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'content'">
+					AND content LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'nickname'">
+					AND nickname LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'location'">
+					AND location LIKE CONCAT('%', #{search}, '%')
+				</if>
+			</if>	
+		ORDER BY wdate DESC) A
+		WHERE rnum BETWEEN ${start} AND ${end}
+	</select>
+	
+	<!-- 홈 글의 총수 -->
+	<select id="getAllHome"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="java.lang.Integer">
+		select ifnull(count(*), 0)
+		from community
+		where category IN ('인증멘토', '멘토&amp;멘티') and del = 0
+		<if test="choice != null and choice != '' and search != null and search != '' ">
+			<if test="choice == 'title'">
+				and title like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'content'">
+				and content like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'nickname'">
+				and nickname like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'location'">
+				and location like concat('%', #{search}, '%')
+			</if>
+		</if>
+	</select>
+	
+	<!-- 인증멘토 목록 -->
+	<select id="PartnerMentorlist"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="gof.gpt5.dto.CommunityDto">
+		SELECT seq, email, nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+		tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM
+		(SELECT row_number()over(order by wdate desc) as rnum, 
+			seq, email,	nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+			tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM community
+		WHERE category = '인증멘토' AND del = 0
+			<if test="choice != null and choice != '' and search != null and search != '' ">
+				<if test="choice == 'title'">
+					AND title LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'content'">
+					AND content LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'nickname'">
+					AND nickname LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'location'">
+					AND location LIKE CONCAT('%', #{search}, '%')
+				</if>
+			</if>	
+		ORDER BY wdate DESC) A
+		WHERE rnum BETWEEN ${start} AND ${end}
+	</select>
+	
+	<!-- 인증멘토 글의 총수 -->
+	<select id="getAllPartnerMentor"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="java.lang.Integer">
+		select ifnull(count(*), 0)
+		from community
+		WHERE category = '인증멘토' AND del = 0
+		<if test="choice != null and choice != '' and search != null and search != '' ">
+			<if test="choice == 'title'">
+				and title like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'content'">
+				and content like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'nickname'">
+				and nickname like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'location'">
+				and location like concat('%', #{search}, '%')
+			</if>
+		</if>
+	</select>
+	
+	<!-- 멘토&멘티 목록 -->
+	<select id="MentorMenteelist"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="gof.gpt5.dto.CommunityDto">
+		SELECT seq, email, nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+		tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM
+		(SELECT row_number()over(order by wdate desc) as rnum, 
+			seq, email,	nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+			tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM community
+		WHERE category = '멘토&amp;멘티' AND del = 0
+			<if test="choice != null and choice != '' and search != null and search != '' ">
+				<if test="choice == 'title'">
+					AND title LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'content'">
+					AND content LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'nickname'">
+					AND nickname LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'location'">
+					AND location LIKE CONCAT('%', #{search}, '%')
+				</if>
+			</if>	
+		ORDER BY wdate DESC) A
+		WHERE rnum BETWEEN ${start} AND ${end}
+	</select>
+	
+	<!-- 멘토&멘티 글의 총수 -->
+	<select id="getAllMentorMentee"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="java.lang.Integer">
+		select ifnull(count(*), 0)
+		from community
+		WHERE category = '멘토&amp;멘티' AND del = 0
+		<if test="choice != null and choice != '' and search != null and search != '' ">
+			<if test="choice == 'title'">
+				and title like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'content'">
+				and content like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'nickname'">
+				and nickname like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'location'">
+				and location like concat('%', #{search}, '%')
+			</if>
+		</if>
+	</select>
+	
+	
+	<!-- 운동이야기 목록 -->
+	<select id="ExerciseTalklist"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="gof.gpt5.dto.CommunityDto">
+		SELECT seq, email, nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+		tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM
+		(SELECT row_number()over(order by wdate desc) as rnum, 
+			seq, email,	nickname, memail, mnickname, groupname, career, stime, etime, category, banner, price, location, title, content,
+			tag1, tag2, tag3, wdate, del, readcount, likecount, ref, step, depth
+		FROM community
+		WHERE category = '운동이야기' AND del = 0
+			<if test="choice != null and choice != '' and search != null and search != '' ">
+				<if test="choice == 'title'">
+					AND title LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'content'">
+					AND content LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'nickname'">
+					AND nickname LIKE CONCAT('%', #{search}, '%')
+				</if>
+				<if test="choice == 'location'">
+					AND location LIKE CONCAT('%', #{search}, '%')
+				</if>
+			</if>	
+		ORDER BY wdate DESC) A
+		WHERE rnum BETWEEN ${start} AND ${end}
+	</select>
+	
+	<!-- 운동이야기 글의 총수 -->
+	<select id="getAllExerciseTalk"
+		parameterType="gof.gpt5.dto.CommunityParam"	resultType="java.lang.Integer">
+		select ifnull(count(*), 0)
+		from community
+		WHERE category = '운동이야기' AND del = 0
+		<if test="choice != null and choice != '' and search != null and search != '' ">
+			<if test="choice == 'title'">
+				and title like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'content'">
+				and content like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'nickname'">
+				and nickname like concat('%', #{search}, '%')
+			</if>
+			<if test="choice == 'location'">
+				and location like concat('%', #{search}, '%')
+			</if>
+		</if>
+	</select>
+	
+	<!-- 조회수 증가 -->
+    <update id="increaseReadCount" parameterType="java.lang.Integer">
+        UPDATE community
+        SET readcount = readcount + 1
+        WHERE seq = #{seq}
+    </update>
+	
+	
 </mapper>
 
 

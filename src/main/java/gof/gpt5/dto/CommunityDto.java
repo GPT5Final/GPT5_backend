@@ -3,39 +3,43 @@ package gof.gpt5.dto;
 public class CommunityDto {
 
 	private int seq;
-    private String email;
-    private String nickname;
-    private String groupname;
-    private String career;
-    private String stime;
-    private String etime;
-    private String category;
-    private String banner;
-    private String price;
-    private String location;
-    private String title;
-    private String content;
-    private String tag1;
-    private String tag2;
-    private String tag3;
-    private int del;
+	private String email;
+	private String nickname;
+	private String memail;
+	private String mnickname;
+	private String groupname;
+	private String career;
+	private String stime;
+	private String etime;
+	private String category;
+	private String banner;
+	private String price;
+	private String location;
+	private String title;
+	private String content;
+	private String tag1;
+	private String tag2;
+	private String tag3;
+	private int del;
 	private int readcount;
 	private int likecount;
-    private int ref;
-    private int step;
-    private int depth;
-    
-    public CommunityDto() {
+	private int ref;
+	private int step;
+	private int depth;
+
+	public CommunityDto() {
 	}
 
-	public CommunityDto(int seq, String email, String nickname, String groupname, String career, String stime,
-			String etime, String category, String banner, String price, String location, String title, String content,
-			String tag1, String tag2, String tag3, int del, int readcount, int likecount, int ref, int step,
-			int depth) {
+	public CommunityDto(int seq, String email, String nickname, String memail, String mnickname, String groupname,
+			String career, String stime, String etime, String category, String banner, String price, String location,
+			String title, String content, String tag1, String tag2, String tag3, int del, int readcount, int likecount,
+			int ref, int step, int depth) {
 		super();
 		this.seq = seq;
 		this.email = email;
 		this.nickname = nickname;
+		this.memail = memail;
+		this.mnickname = mnickname;
 		this.groupname = groupname;
 		this.career = career;
 		this.stime = stime;
@@ -55,8 +59,7 @@ public class CommunityDto {
 		this.ref = ref;
 		this.step = step;
 		this.depth = depth;
-	}   
-	
+	}
 
 	public int getSeq() {
 		return seq;
@@ -80,6 +83,22 @@ public class CommunityDto {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getMemail() {
+		return memail;
+	}
+
+	public void setMemail(String memail) {
+		this.memail = memail;
+	}
+
+	public String getMnickname() {
+		return mnickname;
+	}
+
+	public void setMnickname(String mnickname) {
+		this.mnickname = mnickname;
 	}
 
 	public String getGroupname() {
@@ -233,18 +252,15 @@ public class CommunityDto {
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
-	
 
 	@Override
 	public String toString() {
-		return "CommunityDto [seq=" + seq + ", email=" + email + ", nickname=" + nickname + ", groupname=" + groupname
-				+ ", career=" + career + ", stime=" + stime + ", etime=" + etime + ", category=" + category
-				+ ", banner=" + banner + ", price=" + price + ", location=" + location + ", title=" + title
-				+ ", content=" + content + ", tag1=" + tag1 + ", tag2=" + tag2 + ", tag3=" + tag3 + ", del=" + del
-				+ ", readcount=" + readcount + ", likecount=" + likecount + ", ref=" + ref + ", step=" + step
-				+ ", depth=" + depth + "]";
+		return "CommunityDto [seq=" + seq + ", email=" + email + ", nickname=" + nickname + ", memail=" + memail
+				+ ", mnickname=" + mnickname + ", groupname=" + groupname + ", career=" + career + ", stime=" + stime
+				+ ", etime=" + etime + ", category=" + category + ", banner=" + banner + ", price=" + price
+				+ ", location=" + location + ", title=" + title + ", content=" + content + ", tag1=" + tag1 + ", tag2="
+				+ tag2 + ", tag3=" + tag3 + ", del=" + del + ", readcount=" + readcount + ", likecount=" + likecount
+				+ ", ref=" + ref + ", step=" + step + ", depth=" + depth + "]";
 	}
 
-
-    
 }

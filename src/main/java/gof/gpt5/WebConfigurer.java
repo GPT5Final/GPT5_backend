@@ -29,7 +29,7 @@ public class WebConfigurer implements WebMvcConfigurer{
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// TODO Auto-generated method stub
 		registry.addResourceHandler("/static/images/**").addResourceLocations("classpath:/static/images/");
-		
+		registry.addResourceHandler("/static/GuideImages/**").addResourceLocations("classpath:/static/GuideImages/");
 		registry.addResourceHandler("/static/inqImages/**").addResourceLocations("classpath:/static/inqImages/");
 		
 	}
